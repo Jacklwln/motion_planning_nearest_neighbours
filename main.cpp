@@ -90,7 +90,7 @@ int main(int argc,char ** argv)
 
     kd_tree T(ones<vec>(2),ones<ivec>(2),zeros<vec>(2),ones<vec>(2));
 
-    mat X = randu<mat>(2,200);
+    mat X = randu<mat>(2,atoi(argv[1]));
     for(int i=0;i<X.n_cols;i++)
     {
         T.insert(X.col(i));
