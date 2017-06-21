@@ -243,6 +243,62 @@ struct kd_tree
             }
         }
     }
+
+    void searchK(const vec & y,uvec & b_idx)
+    {
+        for(int k=0;k<b_idx.n_elem;k++)
+            b_idx(k) = 0;
+        vec b_dist = datum::inf*ones(b_idx.n_elem);
+        searchK(root,y,b_idx,b_dist);
+    }
+
+    void searchK(kd_node * & node,const vec & y,uvec & b_idx,vec & b_dist)
+    {
+        if(node == nullptr) return;
+
+        double box_dist = dist_to_rect(y,node->l_x,node->h_x);
+	double b_max = b_dist(b_idx.n_elem-2);
+        if(box_dist < b_max)
+        {
+            for(auto i : node->idxs)
+            {
+                double aux = dist_to_point(x[i],y);
+		uvec a_idx = zeros<uvec>(b_idx.n_elem+1);
+		vec a_dist = zeros<vec>(b_idx.n_elem+1);
+		for(int k=0;k<b_idx.n_elem;k++)	
+		{
+		    a_idx(k) = b_idx(k);
+		    a_dist(k) = b_dist(k);
+		}	
+		a_idx(a_idx.n_elem-1) = i;
+		a_dist(a_idx.n_elem-1) = aux;
+		uvec a = sort_index(a_dist);
+                for(int k=0;k<b_idx.n_elem;k++)
+		{
+		    b_idx(k) = a_idx(a(k));
+		    b_dist(k) = a_dist(a(k));
+		}
+	    }
+            double d_l = datum::inf;
+            double d_r = datum::inf;
+            if(node->l)
+                d_l = dist_to_rect(y,node->l->l_x,node->l->h_x);
+            if(node->r)
+                d_r = dist_to_rect(y,node->r->l_x,node->r->h_x);
+            if(d_l < d_r)
+            {
+                if(node->l) searchK(node->l,y,b_idx,b_dist);
+                if(node->r) searchK(node->r,y,b_idx,b_dist);
+            }
+            else
+            {
+                if(node->r) searchK(node->r,y,b_idx,b_dist);
+                if(node->l) searchK(node->l,y,b_idx,b_dist);
+            }
+        }
+    }
+
+
 };
 
 

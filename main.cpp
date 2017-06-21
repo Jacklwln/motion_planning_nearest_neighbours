@@ -112,15 +112,24 @@ int main(int argc,char ** argv)
         glBegin(GL_POINTS);
         glColor3d(0.0,1.0,0.0);
         glVertex2d(2.0*mouse_x(0)-1.0,2.0*mouse_x(1)-1.0);
-        uword n_idx;
-        T.search(mouse_x,n_idx);
+        uvec n_idx = zeros<uvec>(20);
+        T.searchK(mouse_x,n_idx);
         for(uword i=0;i<X.n_cols;i++)
         {
-            if(i != n_idx)
+	    int idx = -1;
+	    for(uword k=0;k<n_idx.n_elem;k++)
+		if(n_idx[k] == i)
+		{
+		   idx = k;
+		   break;		
+		}
+            if(idx < 0)
                 glColor3d(0.0,0.0,1.0);
+            else if(idx == 0)
+	        glColor3d(1.0,0.0,0.0);
             else
-                glColor3d(1.0,0.0,0.0);
-            glVertex2d(Y(0,i),Y(1,i));
+		glColor3d(1.0,1.0,0.0);
+	    glVertex2d(Y(0,i),Y(1,i));
         }
         glEnd();
 

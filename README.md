@@ -12,5 +12,6 @@ The example is a kd-tree on a torus; which is a cartesian product S_1 x S_1. Add
 
 The red point is the nearest neighbour, on a torus, to the position of the mouse.
 
+The yellow points are the K nearest neighbours of the mouse.
 
 May later be used for a RRT implementation.
