@@ -257,7 +257,7 @@ struct kd_tree
         if(node == nullptr) return;
 
         double box_dist = dist_to_rect(y,node->l_x,node->h_x);
-	double b_max = b_dist(b_idx.n_elem-2);
+	double b_max = b_dist(b_idx.n_elem-1);
         if(box_dist < b_max)
         {
             for(auto i : node->idxs)
